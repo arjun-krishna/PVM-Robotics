@@ -1,2 +1,10 @@
 .DS_Store
 .idea
+
+pretrained/
+exp_local/
+expert_demos/
+csv_output/
+wandb/
+
+__pycache__
