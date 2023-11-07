@@ -138,7 +138,7 @@ suite/metaworld_task=hammer \
 agent.backbone=resnet \
 agent.embedding_name=mocov2-resnet50 \
 num_demos=25 \
-use_wandb=true seed=1 exp_prefix=BC
+use_tb=true use_wandb=true seed=1 exp_prefix=BC
 ```
 - For Meta-World, the maximum value of  `num_demos` is 25.
 
@@ -151,20 +151,20 @@ suite/robosuite_task=panda_door \
 agent.backbone=resnet \
 agent.embedding_name=mocov2-resnet50 \
 num_demos=50 \
-use_wandb=true seed=1 exp_prefix=BC
+use_tb=true use_wandb=true seed=1 exp_prefix=BC
 ```
 - For Robosuite, the maximum value of  `num_demos` is 50.
 
 #### Franka-Kitchen
 ```
-python train_bc.py \
+python src/train_bc.py \
 agent=bc \
 suite=kitchen \
 suite/kitchen_task=turn_knob \
 agent.backbone=resnet \
-agent.embedding_name=mocov2-resnet50 \
+agent.embedding_name=r3m-resnet50 \
 num_demos=25 \
-use_wandb=true seed=1 exp_prefix=BC
+use_tb=true use_wandb=true seed=1 exp_prefix=BC
 ```
 - For Franka-Kitchen, the maximum value of  `num_demos` is 25.
 
