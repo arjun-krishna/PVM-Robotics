@@ -20,3 +20,5 @@ backbone: resnet
 embedding_name: mocov2-resnet50
 freeze: true
 fp16: true
+
+dimr: ${dimr}

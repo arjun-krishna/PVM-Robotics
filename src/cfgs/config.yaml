@@ -1,6 +1,7 @@
 defaults:
   - _self_
   - agent: potil
+  - dimr: identity
   - suite: metaworld
   - override hydra/launcher: submitit_local
 

@@ -1,0 +1,3 @@
+# @package dimr
+_target_: dimr.PCA
+n_components: 50

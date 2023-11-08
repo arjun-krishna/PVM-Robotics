@@ -5,6 +5,7 @@ from torch import nn, optim, distributions
 import utils
 from agent.vit import get_vit
 from agent.resnet import get_unsupervised_resnet
+from dimr import Identity
 
 
 class Actor(nn.Module):
@@ -35,7 +36,7 @@ class Actor(nn.Module):
 class BCAgent:
 	def __init__(self, root_dir, obs_shape, action_shape, device, lr, feature_dim,
 				 hidden_dim, stddev_schedule, stddev_clip, use_tb, augment, suite_name, obs_type,
-				 backbone, embedding_name, freeze, fp16, use_encoded_repr):
+				 backbone, embedding_name, freeze, fp16, use_encoded_repr, dimr = Identity()):
 
 		self.root_dir = root_dir
 		self.device = device
@@ -47,6 +48,7 @@ class BCAgent:
 		self.fp16 = fp16
 		self.encode_repr = not use_encoded_repr
 		self.use_encoder = True if obs_type == 'pixels' else False
+		self.dimr = dimr
 
 		# models
 		if self.use_encoder:
@@ -67,7 +69,7 @@ class BCAgent:
 
 		self.freeze_encoder = freeze
 
-		self.actor = Actor(repr_dim, action_shape).to(device)
+		self.actor = Actor(self.dimr.reduced_dim(repr_dim), action_shape).to(device)
 
 		# optimizers
 		if self.use_encoder and not self.freeze_encoder:
@@ -107,6 +109,7 @@ class BCAgent:
 		obs = torch.as_tensor(obs, device=self.device)
 
 		obs = self.encoder(obs.unsqueeze(0)) if self.use_encoder and self.encode_repr else obs.unsqueeze(0)
+		obs = torch.as_tensor(self.dimr.transform(obs.cpu().numpy()), device=self.device)
 
 		stddev = utils.schedule(self.stddev_schedule, step)
 
@@ -122,6 +125,7 @@ class BCAgent:
 		metrics = dict()
 
 		batch = next(expert_replay_iter)
+		batch[0] = self.dimr.transform(batch[0])
 		obs, action = utils.to_torch(batch, self.device)
 		action = action.float()
 

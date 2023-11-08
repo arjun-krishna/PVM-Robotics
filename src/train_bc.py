@@ -53,6 +53,12 @@ class Workspace:
                 repr = self.agent.get_repr(demo)
                 expert_repr.append(repr)
             self.expert_demo = expert_repr
+            # NOTE: must be set for dimr to work
+            expert_repr = np.stack(expert_repr, axis=0)
+            print("fitting dimr: ", self.agent.dimr)
+            self.agent.dimr.fit(
+                np.stack(expert_repr, axis=0).reshape((-1, expert_repr.shape[-1]))
+            )
 
         self.expert_replay_loader = make_expert_obsaction_replay_loader(
             self.expert_demo, expert_action, self.cfg.batch_size // 2,
