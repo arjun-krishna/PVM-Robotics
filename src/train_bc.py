@@ -72,7 +72,7 @@ class Workspace:
     def setup(self):
         # create logger
         group_name = self.cfg.exp_prefix + '_' + self.cfg.suite.name + '_' + self.cfg.task_name + '_' + self.cfg.exp_suffix
-        self.logger = Logger(self.work_dir, use_tb=self.cfg.use_tb, use_wandb=self.cfg.use_wandb, group_name=group_name)
+        self.logger = Logger(self.work_dir, use_tb=self.cfg.use_tb, use_wandb=self.cfg.use_wandb, group_name=group_name, cfg=self.cfg)
 
         self.train_env = hydra.utils.call(self.cfg.suite.task_make_fn)
         self.eval_env = hydra.utils.call(self.cfg.suite.task_make_fn)

@@ -36,11 +36,12 @@ class Actor(nn.Module):
 class BCAgent:
 	def __init__(self, root_dir, obs_shape, action_shape, device, lr, feature_dim,
 				 hidden_dim, stddev_schedule, stddev_clip, use_tb, augment, suite_name, obs_type,
-				 backbone, embedding_name, freeze, fp16, use_encoded_repr, dimr = Identity()):
+				 backbone, embedding_name, freeze, fp16, use_encoded_repr, dimr = Identity(), weight_decay=0.0):
 
 		self.root_dir = root_dir
 		self.device = device
 		self.lr = lr
+		self.weight_decay = weight_decay
 		self.stddev_schedule = stddev_schedule
 		self.stddev_clip = stddev_clip
 		self.use_tb = use_tb
@@ -73,8 +74,8 @@ class BCAgent:
 
 		# optimizers
 		if self.use_encoder and not self.freeze_encoder:
-			self.encoder_opt = torch.optim.Adam(self.encoder.parameters(), lr=lr)
-		self.actor_opt = torch.optim.Adam(self.actor.parameters(), lr=lr)
+			self.encoder_opt = torch.optim.Adam(self.encoder.parameters(), lr=lr, weight_decay=weight_decay)
+		self.actor_opt = torch.optim.Adam(self.actor.parameters(), lr=lr, weight_decay=weight_decay)
 
 		# data augmentation
 		self.aug = utils.RandomShiftsAug(pad=6)
@@ -173,5 +174,5 @@ class BCAgent:
 
 		# Update optimizers
 		if self.use_encoder and not self.freeze_encoder:
-			self.encoder_opt = torch.optim.Adam(self.encoder.parameters(), lr=self.lr)
-		self.actor_opt = torch.optim.Adam(self.actor.parameters(), lr=self.lr)
+			self.encoder_opt = torch.optim.Adam(self.encoder.parameters(), lr=self.lr, weight_decay=self.weight_decay)
+		self.actor_opt = torch.optim.Adam(self.actor.parameters(), lr=self.lr, weight_decay=self.weight_decay)

@@ -3,7 +3,7 @@ defaults:
   - agent: potil
   - dimr: identity
   - suite: metaworld
-  - override hydra/launcher: submitit_local
+#  - override hydra/launcher: submitit_local
 
 # Root Dir
 root_dir: '/home/ark/workspace/pvr_il_eval/PVM-Robotics'
@@ -45,8 +45,8 @@ hydra:
     dir: ./exp_local/${now:%Y.%m.%d}/${now:%H%M%S}_${experiment}
   sweep:
     dir: ./exp_local/${now:%Y.%m.%d}/${now:%H%M%S}
-    subdir: ${hydra.job.num}
-  launcher:
-    tasks_per_node: 1
-    nodes: 1
-    submitit_folder: ./exp/${now:%Y.%m.%d}/${now:%H%M%S}_${experiment}/.slurm
+    subdir: ${experiment}_${hydra.job.num}
+  # launcher:
+  #   tasks_per_node: 1
+  #   nodes: 1
+  #   submitit_folder: ./exp/${now:%Y.%m.%d}/${now:%H%M%S}_${experiment}/.slurm

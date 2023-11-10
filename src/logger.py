@@ -3,6 +3,7 @@ import datetime
 from collections import defaultdict
 
 import numpy as np
+import omegaconf
 import torch
 import torchvision
 from termcolor import colored
@@ -123,7 +124,7 @@ class MetersGroup(object):
 
 
 class Logger(object):
-	def __init__(self, log_dir, use_tb, use_wandb=False, group_name=None):
+	def __init__(self, log_dir, use_tb, use_wandb=False, group_name=None, cfg=None):
 		self._log_dir = log_dir
 		self._train_mg = MetersGroup(log_dir / 'train.csv',
 									 formating=COMMON_TRAIN_FORMAT, dump_csv=False)
@@ -141,7 +142,8 @@ class Logger(object):
 				exp_group = exp_group[:-7]
 			else:
 				exp_group = group_name
-			self.wandb_writer = wandb.init(project='PVM-Robotics', group=exp_group, name=exp_name)
+			config = omegaconf.OmegaConf.to_container(cfg, resolve=True)
+			self.wandb_writer = wandb.init(project='PVM-Robotics', group=exp_group, name=exp_name, config=config)
 		else:
 			self.wandb_writer = None
 
